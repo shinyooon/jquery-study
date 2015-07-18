@@ -1,0 +1,9 @@
+*jquery에서 선택자 찾기
+
+parent대신 closest
+children대신 find
+
+*jquery선택자
+- $('#id') //html상에서id값은 유니크해야한다.
+- $('.class') //class값을 갖는 요소를 찾을때
+- $('tag') //태그요소를 찾을때
