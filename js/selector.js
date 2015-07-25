@@ -1,7 +1,8 @@
 $(function(){
-	//초기에 해야할 일
-	$('#btnLogin').click(checkIdAndPw);
+	//초기에 해야할 일. js파일이 시작
+	$('#btnLogin').click(checkEmailAndPassword);
 	// $('#btnLogin').click(showEmail);
+	$('font').hide();
 });
 
 function show(){
@@ -34,7 +35,7 @@ function checkIdAndPw(){
 	/*
 	for(var i=0;i<$inputs.length;i++){
 		var input = $inputs[i]
-	
+
 	}
 	console.log($input);
 	for문과 each문 동일한 문법 성능적으로는 each가 사용하기 좋다
@@ -54,7 +55,7 @@ function checkIdAndPw(){
 		//'', null, undefineded, 0, false
 		if(!$input.val()){
 			required=false;
-			txt = '모든 값을 넣어주세요' 
+			txt = '모든 값을 넣어주세요'
 		}
 
 	});
@@ -66,11 +67,11 @@ function checkIdAndPw(){
 	}
 	if(!emailChecked){
 		required=false;
-		txt = '올바른 아이디 값을 넣어주세요.'  
+		txt = '올바른 아이디 값을 넣어주세요.'
 	}
-	if($inputPw.val()!=$inputPwCheck.val()){
+	if($inputPw.val()!==$inputPwCheck.val()){//값을 비교할때에는 비교연산자를 사용한다.
 		required=false;
-		txt = '동일한 비밀번호를 넣어주세요.'  
+		txt = '동일한 비밀번호를 넣어주세요.'
 	}
 
 	if(!required){
@@ -79,4 +80,45 @@ function checkIdAndPw(){
 		alert('로그인');
 	}
 
-}	
+}
+function checkEmailAndPassword(){
+	var cEmail = checkEmail(),
+	      cPassword = checkPassword();
+	      cPasswordConfrim = checkPasswordConfirm();
+	if(cEmail&&cPassword){
+		alert('로그인!');
+	}
+}
+function checkEmail(){
+	var $inputEmail = $('#inputEmail');
+	var $fontChild = $inputEmail.closest('p').find('font');
+
+	if(!$inputEmail.val()){
+		$fontChild.show();
+		$inputEmail.addClass('empty');
+		return false;
+	}else{
+		$fontChild.hide();
+		$inputEmail.removeClass('empty');
+	}
+	return true;
+}
+function checkPassword(){
+	var $inputPassword= $('#inputPassword');
+	var $fontChild = $inputPassword.closest('p').find('font');
+
+	if(!$inputPassword.val()){
+		$fontChild.show();
+		$inputPassword.addClass('empty');
+		return false;
+	}else{
+		$fontChild.hide();
+		$inputPassword.removeClass('empty');
+	}
+	return true;
+}
+function checkPasswordConfirm(){
+	var $inputPasswordConfrim= $('#inputPasswordConfrim');
+	var $fontChilds = $inputPasswordConfrim.closest('p').find('font');
+	//비밀번호 확인 기능추가하기
+}
