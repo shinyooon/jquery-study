@@ -22,7 +22,7 @@ var member = {
 	closeModal : function(){
 		$('#memberModal').modal('hide');
 	},
-	
+
 	reset : function(){
 		this.currentData = {};
 		$('#inputEmail').val('');
@@ -31,6 +31,7 @@ var member = {
 	},
 
 	init : function(){
+		var that = this;
 		this.list = (this.list.length > 0)? this.list : this.generateMembers();
 		this.makeTbody(this.list);
 		this.$el = $('#memberMain');
@@ -41,8 +42,15 @@ var member = {
 			member.showModal();
 		});
 
-		this.$el.find('#btnSubmit').click(this.save());
-		this.$el.find('#btnClose').click(this.closeModal());
+		// this.$el.find('#btnSubmit').click(
+		// 	member.save;//member.save()  소괄호를 사용하면 함수를 무조건 한번은 실행됨
+		// );
+		this.$el.find('#btnSubmit').click(function(){
+			member.save(); //function으로 감쌌으면 이 함수(클릭) 내에서만 즉시 실행됨
+		});
+		this.$el.find('#btnClose').click(function(){
+			member.closeModal();
+		});
 	},
 
 	generateMembers : function(){
@@ -86,16 +94,20 @@ var member = {
 				job 		: 'web publisher',
 				joinDate	: '2015-02-12',
 				updateDate 	: '2015-07-30'
-			}								
+			}
 		];
 
-		return members;		
+		return members;
 	},
 
 	makeTbody : function(members){
 		var $table = $('#tMember'),
+			$oldTbody = $table.find('tbody'),
 			$tbody = $(document.createElement('tbody'));
 
+		if($oldTbody){
+			$oldTbody.remove();
+		}
 		$.each(members, function(index, member){
 			var $tr = $(document.createElement('tr'));
 			$tr.addClass('member_info');
@@ -124,7 +136,7 @@ var member = {
 
 		return res;
 	},
-	
+
 	edit : function(member){
 		var member = member,
 			$inputEmail = $('#inputEmail'),
@@ -152,8 +164,12 @@ var member = {
 		member.job = $inputJob.val();
 		member.updateDate = this.dateFormat();
 
-		this.list.push(member);
-		//this.init();
+		this.send(member);
+	},
+	send : function(){
+		this.list[member.idx-1] = member;
+		this.init();
+		this.closeModal();
 	},
 
 	generateIdx : function(){
@@ -162,8 +178,13 @@ var member = {
 	},
 
 	dateFormat : function(date){
-		var date = date || new Date();
+		var date = date || new Date(),
+			year = date.getFullYear(),
+			month = date.getMonth()+1,
+			day = date.getDate();
+		month = (month <10)?'0'+month: month;
+		day = (day<10)?'0'+day:day;
 		return date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (date.getDate());
-	}	
+	}
 
 }
