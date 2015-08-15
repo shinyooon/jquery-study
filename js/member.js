@@ -14,6 +14,8 @@ var member = {
 		if(!this.currentData.idx){
 			this.reset();
 			this.currentData.joinDate = this.dateFormat();
+		}else{
+			this.reset();
 		}
 
 		$('#memberModal').modal();
@@ -50,6 +52,9 @@ var member = {
 		});
 		this.$el.find('#btnClose').click(function(){
 			member.closeModal();
+		});
+		this.$el.find('#btnAdd').click(function(){
+			member.showModal();
 		});
 	},
 
