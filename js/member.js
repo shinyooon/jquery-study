@@ -13,7 +13,6 @@ var member = {
 	showModal : function(){
 		if(!this.currentData.idx){
 			this.reset();
-			this.currentData.joinDate = this.dateFormat();
 		}
 
 		$('#memberModal').modal();
@@ -50,6 +49,10 @@ var member = {
 		});
 		this.$el.find('#btnClose').click(function(){
 			member.closeModal();
+		});
+		this.$el.find('#btnAdd').click(function(){
+			member.currentData= {};
+			member.showModal();
 		});
 	},
 
@@ -162,11 +165,14 @@ var member = {
 		member.email = $inputEmail.val();
 		member.name = $inputName.val();
 		member.job = $inputJob.val();
+		if(member.idx>this.list.length){
+			member.joinDate = this.dateFormat();
+		}
 		member.updateDate = this.dateFormat();
 
 		this.send(member);
 	},
-	send : function(){
+	send : function(member){
 		this.list[member.idx-1] = member;
 		this.init();
 		this.closeModal();
@@ -182,9 +188,9 @@ var member = {
 			year = date.getFullYear(),
 			month = date.getMonth()+1,
 			day = date.getDate();
-		month = (month <10)?'0'+month: month;
+		month = (month <10)? '0'+month : month;
 		day = (day<10)?'0'+day:day;
-		return date.getFullYear() + '-' + (date.getMonth()+1) + '-' + (date.getDate());
+		return year + '-' + (month) + '-' + (day);
 	}
 
 }
