@@ -69,7 +69,7 @@ var user  = {
 		}
 
 		// 3. 이미 등록된 사용자가 아닌가?
-		if(this.find(email)[0]){
+		if(this.find(email)){
 			alert('이메일이 중복됩니다.')
 			return;
 		}
@@ -102,31 +102,18 @@ var user  = {
 
 		return result;
 	},
-	find : function(email){
-		//email중복되는지 체크하고 같은 이메일이 있다면 true 없다면 false;
-		var i = 0;
-		var result = null; //false값을 넣지 않으면 undefined이고 javascript 는 undifined를 false.
-
-		for(i = 0;i<users.length;i++){
-			if(users[i].email===email){
-				result  = users[i];
-				break;
-			}else{
-				result = null;
-			}
-		}
-		/*
-		//성능을 따지면 for문이 성능면에서는 훨씬 좋긴하지만
-		변수 scope를 잘 활용하기 위해서는 each를 사용하는게 편하다.
-		$.each(users,function(index, value){
-			if(users[index].email===email){
-				result  = true;
+	find : function(email) {
+		var result;
+		$.each(users, function(index, user){
+			if (user.name === email) {
+				result = user;
 				return;
 			}
-		})
-		*/
+		});
+
 		return result;
 	},
+
 	save : function(obj){
 		users.push(obj);
 		alert('등록되었습니다.');
@@ -138,7 +125,7 @@ var user  = {
 			password = this.$el.find('#loginPassword').val();
 			result = true;
 		var user = this.find(email);
-		if(this.find(email)){
+		if(user){
 			if(user.password === password){
 				result=true;
 			}else{
