@@ -1,0 +1,25 @@
+{
+	"name": "jquery-study",
+	"version": "0.0.0",
+	"homepage": "https://github.com/shinyooon/jquery-study",
+	"authors": [
+	"shinyooon <talkyfull@gmail.com>"
+	],
+	"description": "front project for jquery study",
+	"keywords": [
+	"jquery",
+	"angualr"
+	],
+	"license": "MIT",
+	"ignore": [
+	"**/.*",
+	"node_modules",
+	"bower_components",
+	"test",
+	"tests"
+	],
+	"dependencies": {
+	"bootstrap": "~3.3.5",
+	"jquery": "~2.1.4"
+	}
+}
