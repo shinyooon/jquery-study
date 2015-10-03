@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<script type="text/javascript" src="../lib/jquery/jquery-1.11.3.min.js"></script>
+	<title>에코</title>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			var $echoInput = $('.echoInput');
+			var $echo = $('h3');
+			$echoInput.keypress(function(){
+				var str = 'Echo : ' + $echoInput.val();
+				$echo.html(str);
+			});
+		});
+
+	</script>
+</head>
+<body>
+	<span>Insert your name :  </span>
+	<input type="text" class="echoInput" />
+	<h3>Echo : </h3>
+</body>
