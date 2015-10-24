@@ -69,7 +69,7 @@ var user  = {
 		}
 
 		// 3. 이미 등록된 사용자가 아닌가?
-		if(this.find({email : email})){
+		if(this.find(email)){
 			alert('이메일이 중복됩니다.')
 			return;
 		}
@@ -102,26 +102,16 @@ var user  = {
 
 		return result;
 	},
-	find : function(obj) {
+	find : function(email) {
 		var result;
-
-		$.ajax({
-			method : 'POST',
-			url : 'email',
-			data : obj,
-			dataType : 'json',
-			success : function(data){
-				alert(data.status+ '\n' + data.message);
-				return data.status;
+		$.each(users, function(index, user){
+			if (user.name === email) {
+				result = user;
+				return;
 			}
-		})
-		// $.each(users, function(index, user){
-		// 	if (user.name === obj) {
-		// 		result = user;
-		// 		return;
-		// 	}
-		// });
-		// return result;
+		});
+
+		return result;
 	},
 
 	save : function(obj){
