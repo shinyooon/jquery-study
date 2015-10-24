@@ -1,29 +1,39 @@
-$(function(){
-	user.init();
-});
-//db연동시 삭제
+// DB 연동시 삭제될 부분
 var currentTime = new Date();
 var users = [{
-	email : '1',
-	password : '1',
-	name : '1',
-	job : '1',
-	joinDate : currentTime,
-	updateDate : currentTime
-}, {
-	email : '2',
-	password : '2',
-	name : '2',
-	job : '2',
-	joinDate : currentTime,
-	updateDate : currentTime
+		email : '1',
+		password : '1',
+		name : '1',
+		job : '1',
+		joinDate : currentTime,
+		updateDate : currentTime
+},
+{
+		email : '2',
+		password : '2',
+		name : '2',
+		job : '2',
+		joinDate : currentTime,
+		updateDate : currentTime
 }];
 
+$(function(){
 
-var user  = {
+	//js 호출시 바로 시작될 영역
+	user.init();
+});
+
+
+var user = {
+
 	$el : {},
+
 	init : function(){
+
+		//기본적인 이벤트 바인딩
+
 		this.$el = $('.container');
+
 		this.$el.find('#btnSignUp').click(function(){
 			user.showModal();
 		});
@@ -31,24 +41,30 @@ var user  = {
 		this.$el.find('#btnClose').click(function(){
 			user.closeModal();
 		});
+
 		this.$el.find('#btnSubmit').click(function(){
 			user.signUp();
 		});
+
 		this.$el.find('#btnLogin').click(function(){
 			user.login();
 		});
+
 	},
+
 	showModal : function(){
-		user.resetModal();
+		this.resetModal();
 		this.$el.find('#userModal').modal();
 	},
+
 	closeModal : function(){
 		this.$el.find('#userModal').modal('hide');
 	},
+
 	resetModal : function(){
-		this.$el.find('#userModal .signForms').val('');
-		this.$el.find('#userModal .signForms').removeClass('empty');
+		this.$el.find('.signForms').val('');
 	},
+
 	signUp : function(){
 		var email = this.$el.find('#inputEmail').val(),
 			password = this.$el.find('#inputPassword').val(),
@@ -56,32 +72,28 @@ var user  = {
 			name = this.$el.find('#inputName').val(),
 			job = this.$el.find('#inputJob').val();
 
+		var currentTime = new Date();
 
 		// 1. 입력창에서 빈칸은 없는가?
 		if(!this.validate()){
 			alert('필수값을 모두 채워주세요');
 			return;
 		}
-		// 2. password와 passwordConfirm이 같은가?
-		if(password !==passwordConfirm){
-			alert('패스워드가 일치하지 않습니다.');
-			return ;
-		}
 
-		// 3. 이미 등록된 사용자가 아닌가?
-		if(this.find({email : email})){
-			alert('이메일이 중복됩니다.')
-			return;
-		}
-		// 4. 위 검증이 끝나면 회원 가입
-		var currentTime = new Date();
+		// 2. password와 passwordConfirm이 같은가?
+        if(password !== passwordConfirm){
+            alert('패스워드가 일치하지 않습니다.');
+            return;
+        }
+
+		// 저장
 		this.save({
-			email : email,
-			password : password,
-			name : name,
-			job : job,
-			joinDate : currentTime,
-			updateDate : currentTime
+					email : email,
+					password : password,
+					name : name,
+					job : job,
+					joinDate : currentTime,
+					updateDate : currentTime
 		});
 	},
 
@@ -102,55 +114,72 @@ var user  = {
 
 		return result;
 	},
-	find : function(obj) {
+
+	//DB 연동시 수정
+	find : function(obj){
 		var result;
+		var _ = this;
 
 		$.ajax({
-			method : 'POST',
-			url : 'email',
-			data : obj,
-			dataType : 'json',
-			success : function(data){
-				alert(data.status+ '\n' + data.message);
-				return data.status;
+			method: 'POST',
+			url: 'email',
+			data: obj,
+			dataType: 'json',
+			success: function(data){
+
+				alert(data.status);
+
+				//data.status는 조작 가능
+				if(!data.status){
+					_.save(obj);
+					_.closeModal();
+				}else{
+					alert('이미 가입된 사용자입니다.');
+				}
 			}
-		})
-		// $.each(users, function(index, user){
-		// 	if (user.name === obj) {
-		// 		result = user;
-		// 		return;
-		// 	}
-		// });
-		// return result;
+
+		});
 	},
 
+	//DB 연동시 수정
 	save : function(obj){
-		users.push(obj);
-		alert('등록되었습니다.');
-		this.closeModal();
-	},
-	login:function(){
-		//입력창에 입력된 email과 password를 검사해서 일치하면 로그인  아니면 email & password 확인 alert
-		var email = this.$el.find('#loginEmail').val(),
-			password = this.$el.find('#loginPassword').val();
-			result = true;
-		var user = this.find(email);
-		if(user){
-			if(user.password === password){
-				result=true;
-			}else{
-				result=false;
+		var _ = this;
+
+		$.ajax({
+			method: 'POST',
+			url: 'user',
+			data: obj,
+			dataType: 'json',
+			success: function(data){
+
+				if(data.status){
+					alert('등록 되었습니다.');
+					_.closeModal();
+				}else{
+					alert('이미 가입된 사용자입니다.');
+				}
 			}
-		}else{
-			result=false;
-		}
+		});
+	},
 
-		if(result){
-			alert('로그인')
-		}else{
-			alert('아이디와 비밀번호를 확인해주세요.');
-		}
+	login : function(){
+		var email = this.$el.find('#loginEmail').val(),
+			password = this.$el.find('#loginPassword').val(),
+			obj = {email : email, password : password};
+
+		$.ajax({
+			method: 'POST',
+			url: 'login',
+			data: obj,
+			dataType: 'json',
+			success: function(data){
+
+				if(data.status){
+					location.href=location.origin+"/board/list";
+				}else{
+					alert('ID와 비밀번호를 확인하세요');
+				}
+			}
+		});
 	}
-
-
 }
