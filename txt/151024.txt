@@ -1,0 +1,6 @@
+js프레임웍
+
+backbone - underscore.js(javascript util)
+handlebar - 템플리팅 언어(스크립트) - sk플래닛// 반복되는 html작업을 템플리팅 작업으로 간단하게 사용할수 있게..
+angular - google
+react - facebook

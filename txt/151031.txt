@@ -1,0 +1,13 @@
+naming규칙
+
+btnAdd - 카멜케이스(camelcase) : js
+btn_add - 언더스코어(underscore) : html, css
+
+호스팅
+- https://www.heroku.com/
+- 신기술사용하기 용이
+
+command 명령어
+-폴더 이동 : cd 경로
+-현재 파일 확인 : ls
+-폴더 생성 : mkdir 폴더명
