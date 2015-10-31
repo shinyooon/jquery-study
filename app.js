@@ -90,13 +90,15 @@ app.post('/login', function(req, res){
 	}
 	res.send(result);
 });
-app.get('/session', function(req,res){
-	res.send(req.session.user);
-});
 app.get('/logout', function(req,res){
 	req.session.user=null;
 	res.send(req.session.user);
 });
+
+app.get('/session', function(req,res){
+	res.send(req.session.user);
+});
+
 app.post('/email', function(req, res){
 	var obj = req.body;
 
@@ -112,9 +114,47 @@ app.post('/email', function(req, res){
 	}
 	res.send(result);
 });
+app.get('/profile', function(req,res){
+	var user = {},
+	loginUser = req.session.user;
 
+	for(var prop in loginUser){
+		if(loginUser.hasOwnProperty(prop) && prop !=='password'){// 로그인 성공시가 아니어도 password확인이 가능하기때문에 password값은 보내지 않는다.
+			user[prop] = loginUser[prop];
+			//user.prop = loginUser.prop; user의 prop속성을 찾게됨
+			//user['age'] ==user.age  가 되어야 하는데 user['prop']로 인식
+		}
+	}
+	res.send(user);
+});
+app.post('/profile', function(req, res){
+	var obj = req.body,
+		loginUser = req.session.user;
+	var result={};
 
+	if(!loginUser){
+		res.redirect('/');
+	}
 
+	if(obj.originPassword != loginUser.password){
+		console.log('password not matched');
+		result.status=false;
+		res.send(result);
+	}else{
+		for(var i=0;i<users.length;i++){
+			if(obj.email === users[i].email){
+				console.log('success');
+				users[i].password = obj.newPassword;
+				users[i].job = obj.job;
+				users[i].name = obj.name;
+				result.user = users[i];
+				result.status = true;
+				break;
+			}
+		}
+		res.send(result);
+	}
+});
 
 app.listen(8080);
 console.log('Express Listening on port 8080...');

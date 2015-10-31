@@ -81,19 +81,19 @@ var user = {
 		}
 
 		// 2. password와 passwordConfirm이 같은가?
-        if(password !== passwordConfirm){
-            alert('패스워드가 일치하지 않습니다.');
-            return;
-        }
+		if(password !== passwordConfirm){
+			alert('패스워드가 일치하지 않습니다.');
+			return;
+		}
 
 		// 저장
 		this.save({
-					email : email,
-					password : password,
-					name : name,
-					job : job,
-					joinDate : currentTime,
-					updateDate : currentTime
+				email : email,
+				password : password,
+				name : name,
+				job : job,
+				joinDate : currentTime,
+				updateDate : currentTime
 		});
 	},
 
