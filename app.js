@@ -1,77 +1,68 @@
-//메인 자바스크립트 파일
-//모든 외부호출을 여기서 관리
 var express = require('express');
 var app = express();
 var path = require('path');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+var mongoskin = require('mongoskin');
 
-/*
-	DB 연동시 삭제될 부분
-*/
-var currentTime = new Date();
-var users = [{
-		email : '1',
-		password : '1',
-		name : '1',
-		job : '1',
-		joinDate : currentTime,
-		updateDate : currentTime
-},
-{
-		email : '2',
-		password : '2',
-		name : '2',
-		job : '2',
-		joinDate : currentTime,
-		updateDate : currentTime
-}];
+var db = mongoskin.db("mongodb://localhost:27017/front", {native_parser:true});
+db.bind('users');
 
 app.use(express.static(path.join(__dirname, '')));
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(session({
-	secret : 'jquery salt',
-	resave : false,
-	saveUninitalized : true
-}))
+	secret:'jquery salt',
+	resave:false,
+	saveUninitalized:true
+}));
+
 
 app.get('/', function(req, res){
 	res.sendFile(path.join(__dirname + '/view/login.html'));
 })
 
 app.get('/user', function(req, res) {
-	res.send(users);
+    db.users.find().toArray(function(err, users){
+		if(err){
+			console.log('get user list error');
+		}
+		//db.close();
+		res.send(users);
+	});
 });
 
 app.get('/user/:idx', function(req, res) {
-	res.send(users[req.params.idx]);
+    res.send(users[req.params.idx]);
 });
-app.get('/board/list', function(req, res){
-	var loginUser = req.session.user;
-	if(!req.session.user){
-		res.redirect('/');
-	}
-	res.sendFile(path.join(__dirname + '/view/board.html'));
-});
+
 app.post('/user', function(req, res){
 	var obj = req.body;
 	var result = {
-		status : true
+		status : false
 	};
+	console.log('진입점');
 
-	for(var i=0;i<users.length;i++){
-		if(obj.email === users[i].email){
-			result.status = false;
-			break;
+    db.users.findOne({email:obj.email}, function(err, user){
+		if(err){
+			console.log('user find error in save');
 		}
-	}
+		console.log('find');
 
-	if(result.status){
-		users.push(obj);
-	}
-
-	res.send(result);
+		if(!user){
+            db.users.save(obj, function(err){
+				if(err){
+					console.log('user save error');
+				}
+				console.log('save');
+				result.status = true;
+                res.send(result);
+			});
+		}else{
+            res.send(result);
+        }
+	});
+	console.log('하이');
 });
 
 app.post('/login', function(req, res){
@@ -84,49 +75,36 @@ app.post('/login', function(req, res){
 	for(var i=0;i<users.length;i++){
 		if(obj.email === users[i].email && obj.password === users[i].password){
 			result.status = true;
-			req.session.user= users[i]
+			req.session.user = users[i];
 			break;
 		}
 	}
 	res.send(result);
 });
-app.get('/logout', function(req,res){
-	req.session.user=null;
+
+app.get('/session', function(req, res){
 	res.send(req.session.user);
 });
 
-app.get('/session', function(req,res){
-	res.send(req.session.user);
-});
-
-app.post('/email', function(req, res){
-	var obj = req.body;
-
-	var result = {
-		status : false
-	};
-
-	for(var i=0;i<users.length;i++){
-		if(obj.email === users[i].email){
-			result.status = true;
-			break;
-		}
+app.get('/board/list', function(req, res){
+	if(!req.session.user){
+		res.redirect('/');
 	}
-	res.send(result);
+	res.sendFile(path.join(__dirname + '/view/board.html'));
 });
-app.get('/profile', function(req,res){
+
+app.get('/profile', function(req, res){
 	var user = {},
-	loginUser = req.session.user;
+		loginUser = req.session.user;
 
-	for(var prop in loginUser){
-		if(loginUser.hasOwnProperty(prop) && prop !=='password'){// 로그인 성공시가 아니어도 password확인이 가능하기때문에 password값은 보내지 않는다.
+	for(var prop in loginUser ){
+		if(loginUser.hasOwnProperty(prop) && prop !== 'password'){
 			user[prop] = loginUser[prop];
-			//user.prop = loginUser.prop; user의 prop속성을 찾게됨
-			//user['age'] ==user.age  가 되어야 하는데 user['prop']로 인식
 		}
 	}
 	res.send(user);
 });
+
 app.post('/profile', function(req, res){
 	var obj = req.body,
 		loginUser = req.session.user;
@@ -154,6 +132,18 @@ app.post('/profile', function(req, res){
 		}
 		res.send(result);
 	}
+});
+
+app.get('/logout', function(req, res){
+	req.session.user=null;
+	res.send(req.session.user);
+});
+
+app.get('/board/list', function(req, res){
+	if(!req.session.user){
+		res.redirect('/');
+	}
+	res.sendFile(path.join(__dirname + '/view/board.html'));
 });
 
 app.listen(8080);

@@ -1,0 +1,38 @@
+*몽고DB
+
+string만 저장
+ - {name : '이동욱', job:'개발자'}형태
+ - 찾을때도 find({name : '이동욱' })로
+
+
+1. mongodb설치
+2. 압축풀어서bin폴더내에 data, log폴더생성 
+3. data폴더 내 db폴더생성
+4. sc create mongodb binPath="C:\Users\Yuna\Desktop\mongodb\bin\mongod.exe --service --dbpath C:\Users\Yuna\Desktop\mongodb\data\db --logpath C:\Users\Yuna\Desktop\mongodb\log\log.txt --directoryperdb" start= auto
+5. 내컴퓨터속성 > 시스템속성 > 고급 > 환경변수 > path를 편집해서 ;C:\Users\Yuna\Desktop\mongodb\bi\ 뒤에 입력
+6. sc start mongodb
+
+use front; front라는 db가 생성됨
+show collections; 현재 db의 모든 테이블 보기
+db.test.save.({name : 'yuna', age: 27}); front db에 test라는 collection(table)이 생성됨
+db.test.find(); test폴더안에 있는 데이터가 보여짐
+db.findOne({age : 20 }); age가 20인 데이터 찾기
+
+
+
+순수 js
+ - coffe script
+ - es6(ECMAScript6)
+
+grunt > gulp
+bower > npm
+      > webpack
+front : angular > angular/react(페이스북에서 만든 framework)
+angular 2.x == react
+
+react
+ - isomhopic
+ - jsp(jstl) 서버단에서 html을 템플릿팅 후 angular, handlebar같은 팁플릿  엔진으로 템플릿하는 과정을 하나로!
+
+콜백지옥 탈출기 : async > promise
+
