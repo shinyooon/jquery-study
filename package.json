@@ -1,25 +1,27 @@
 {
-  "name": "jquery-study",
-  "version": "1.0.0",
-  "description": "",
-  "main": "test.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/shinyooon/jquery-study.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/shinyooon/jquery-study/issues"
-  },
-  "homepage": "https://github.com/shinyooon/jquery-study#readme",
-  "dependencies": {
-    "body-parser": "^1.14.1",
-    "express": "^4.13.3",
-    "express-session": "^1.11.3",
-    "path": "^0.12.7"
-  }
+	"name": "jquery-study",
+	"version": "1.0.0",
+	"description": "",
+	"main": "test.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/shinyooon/jquery-study.git"
+	},
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/shinyooon/jquery-study/issues"
+	},
+	"homepage": "https://github.com/shinyooon/jquery-study#readme",
+	"dependencies": {
+		"body-parser": "^1.14.1",
+		"express": "^4.13.3",
+		"express-session": "^1.11.3",
+		"mongodb": "^2.0.48",
+		"mongoskin": "^2.0.3",
+		"path": "^0.12.7"
+	}
 }
